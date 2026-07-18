@@ -1,0 +1,1 @@
+Read context -> Read standards -> Use architect -> coder -> reviewer.
