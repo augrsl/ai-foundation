@@ -1,0 +1,1 @@
+Architect -> Researcher -> Coder -> Reviewer -> Tester -> Documenter

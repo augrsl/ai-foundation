@@ -1,0 +1,51 @@
+// Purpose: Find all links from the current module to a target module
+// Pattern: Iterate links, filter by target module name
+// Key functions: Link first/next, source, target, sourceVersion, targetVersion
+// Usage: Open source module, run script, enter target module name
+
+pragma runLim , 0
+
+string targetModName = getString("Enter target module name (partial match):")
+if (targetModName == "") {
+    ack "No target module specified"
+    halt
+}
+
+Module m = current Module
+if (m == null) {
+    ack "No module open"
+    halt
+}
+
+Stream out = write("links_to_" targetModName ".txt")
+if (out == null) {
+    ack "Cannot create output file"
+    halt
+}
+
+print(out, "Source ID"	"Source Text"	"Target ID"	"Target Text"	"Link Module"	"\n")
+
+Link l = first(m)
+while (l != null) {
+    Object src = source(l)
+    Object dst = target(l)
+
+    ModuleVersion dstVer = targetVersion(l)
+    string dstModName = fullName(dstVer)
+    LinkRef lr = target(l)
+
+    // Filter by target module name
+    if (find(dstModName, targetModName) > 0) {
+        string srcId   = identifier(src)
+        string srcText = src."Object Text"
+        string dstId   = identifier(dst)
+        string dstText = dst."Object Text"
+
+        println(out, srcId "\t" srcText "\t" dstId "\t" dstText "\t" dstModName)
+    }
+
+    l = next(l)
+}
+
+close(out)
+ack "Link export complete. Check links_to_" targetModName ".txt"

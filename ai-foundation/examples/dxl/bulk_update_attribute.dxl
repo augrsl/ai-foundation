@@ -1,0 +1,28 @@
+// Purpose: Bulk update a specific attribute on all objects matching a condition
+// Pattern: Conditional iteration, attribute write
+// Key functions: for o in m, o."attr" = val
+// Usage: Open a module, modify the condition and attribute name below
+
+pragma runLim , 0
+
+Module m = current Module
+if (m == null) {
+    ack "No module open"
+    halt
+}
+
+string targetAttr = "Reviewed"   // change as needed
+string newValue  = "Yes"         // change as needed
+
+int updated = 0
+Object o
+for o in m do {
+    // Update only objects that have "Object Text" starting with "REQ-"
+    string objText = o."Object Text"
+    if (find(objText, "REQ-") == 1) {
+        o.targetAttr = newValue
+        updated++
+    }
+}
+
+ack "Updated " updated " objects"

@@ -1,0 +1,36 @@
+// Purpose: Export all objects with selected attributes to a tab-separated text file
+// Pattern: Iterate objects, read attributes, write to Stream
+// Key functions: current Module, for o in m, o."attr", Stream write, close
+// Usage: Open a module, run this script, enter output filename
+
+pragma runLim , 0
+
+string fileName = getString("Enter output filename:")
+Stream out = write(fileName)
+if (out == null) {
+    ack "Cannot open file: " fileName
+    halt
+}
+
+Module m = current Module
+if (m == null) {
+    ack "No module open"
+    halt
+}
+
+// Print header
+println(out, "Object Number"	"Object Text"	"Object Heading"	"Created By")
+
+// Iterate all objects
+Object o
+for o in m do {
+    string absNum = absNumber(o)
+    string objText = o."Object Text"
+    string heading = identifier(o)
+    string createdBy = o."Created By"
+
+    println(out, absNum "\t" objText "\t" heading "\t" createdBy)
+}
+
+close(out)
+ack "Export complete: " fileName
